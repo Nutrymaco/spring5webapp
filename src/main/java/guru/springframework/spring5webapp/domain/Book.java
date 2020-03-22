@@ -3,6 +3,7 @@ package guru.springframework.spring5webapp.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,18 +15,27 @@ public class Book {
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private String title;
     private String isbn;
+
+    @ManyToOne
+    private Publisher publisher;
 
     @ManyToMany
     @JoinTable(name = "author_books", joinColumns = @JoinColumn(name = "book_id"),
                 inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> authors;
 
-    public Book(String name, String isbn, Set<Author> authors) {
-        this.name = name;
+    public Book() { }
+
+    public Book(String title, String isbn, Set<Author> authors) {
+        this.title = title;
         this.isbn = isbn;
         this.authors = authors;
+    }
+
+    public Book(String title, String isbn) {
+        this(title, isbn, new HashSet<>());
     }
 
     @Override
@@ -38,6 +48,6 @@ public class Book {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getIsbn(), getAuthors());
+        return id != null ? id.hashCode() : 0;
     }
 }

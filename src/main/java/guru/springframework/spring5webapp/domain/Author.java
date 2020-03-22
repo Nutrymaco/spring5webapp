@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -25,10 +26,16 @@ public class Author {
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books;
 
+    public Author() {books = new HashSet<>();}
+
     public Author(String firstName, String lastName, Set<Book> books) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.books = books;
+    }
+
+    public Author(String firstName, String lastName) {
+        this(firstName, lastName, new HashSet<>());
     }
 
     @Override
@@ -41,6 +48,6 @@ public class Author {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getBooks());
+        return id != null ? id.hashCode() : 0;
     }
 }
